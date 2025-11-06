@@ -11,5 +11,5 @@ header("Content-Type: application/json; charset=utf-8");
 $controller = new ClienteApiController($pdo);
 
 // procesar y responder directamente (la clase hace echo)
-$controller->procesar();
+$controller->procesar();s
 
