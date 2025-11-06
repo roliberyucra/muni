@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../models/Cliente.php';
 require_once __DIR__ . '/../models/Municipio.php';
 
-class ClienteApiController
+class ClienteApiControllers
 {
     private $clienteModel;
     private $municipioModel;
