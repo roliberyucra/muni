@@ -58,22 +58,39 @@ class ClienteApiController
             $id_cliente = $token_arr[2];
 
             // validar cliente activo
-            $cliente = $this->clienteModel->buscarClienteById($id_cliente);
+            // validar cliente activo
+$cliente = $this->clienteModel->buscarClienteById($id_cliente);
 
-            if(!$cliente || $cliente['estado'] != 1){
-                echo json_encode(["status"=>false,"msg"=>"cliente no activo"]);
-                return;
-            }
+if(!$cliente || $cliente['estado'] != 1){
+    echo json_encode(["status"=>false,"msg"=>"cliente no activo"]);
+    return;
+}
 
-            // buscar municipios por departamento
-            $munis = $this->municipioModel->buscarPorDepartamento($data);
+// validar token activo y no expirado
+$stmt = $this->pdo->prepare("
+    SELECT estado, expiracion 
+    FROM tokens 
+    WHERE token=? AND id_cliente=1 
+    ORDER BY id DESC LIMIT 1
+");
+$stmt->execute([$token]);
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            echo json_encode([
-                "status"=>true,
-                "msg"=>"",
-                "contenido"=>$munis
-            ]);
-            return;
+if(!$row){
+    echo json_encode(["status"=>false,"msg"=>"token no registrado"]);
+    return;
+}
+
+if($row['estado'] != 1){
+    echo json_encode(["status"=>false,"msg"=>"token inactivo"]);
+    return;
+}
+
+if(strtotime($row['expiracion']) < time()){
+    echo json_encode(["status"=>false,"msg"=>"token expirado"]);
+    return;
+}
+
         }
 
         if($tipo == "generarToken")
