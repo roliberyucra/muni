@@ -1,7 +1,4 @@
 <?php
-echo json_encode(["tipo_llega"=>$tipo]);
-exit;
-
 
 error_reporting(E_ALL);
 ini_set('display_errors',1);
