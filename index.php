@@ -71,6 +71,17 @@ switch ($action) {
         $authController->logout();
         break;
 
+    case 'editToken':
+    $tokenController->editForm($_GET['id']);
+    break;
+
+    case 'updateToken':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $tokenController->update($_POST);
+        }
+    break;
+
+
     default:
         echo "Acción no válida.";
 }
