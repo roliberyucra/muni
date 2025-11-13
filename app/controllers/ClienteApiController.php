@@ -22,30 +22,36 @@ class ClienteApiController
         $data  = $_POST['data']  ?? $_GET['data']  ?? '';
 
         /* ------- 1) generar token ------- */
-        if($tipo == "generarToken")
-        {
-            $this->pdo->exec("UPDATE tokens SET estado=0 WHERE id_cliente=1");
+        if ($tipo == "generarToken") {
+    // 🔹 Desactivar anteriores
+    $this->pdo->exec("UPDATE tokens SET estado=0 WHERE id_cliente=1");
 
-            $random  = bin2hex(random_bytes(10));
-            $hoy     = date("Ymd");
-            $token   = "$random-$hoy-1";
+    // 🔹 Generar token nuevo
+    $random = bin2hex(random_bytes(10));
+    $hoy    = date("Ymd");
+    $token  = $random . "-" . $hoy . "-1";
 
-            $now    = date("Y-m-d H:i:s");
-            $expira = date("Y-m-d H:i:s", strtotime("+1 hour"));
+    $now    = date("Y-m-d H:i:s");
+    $expira = date("Y-m-d H:i:s", strtotime("+1 hour"));
 
-            $stmt = $this->pdo->prepare("
-                INSERT INTO tokens (id_cliente, token, fecha_registro, expiracion, estado)
-                VALUES (1, :token, :fecha_registro, :expiracion, 1)
-            ");
-            $stmt->execute([
-                ':token'=>$token,
-                ':fecha_registro'=>$now,
-                ':expiracion'=>$expira
-            ]);
+    $stmt = $this->pdo->prepare("
+        INSERT INTO tokens (id_cliente, token, fecha_registro, expiracion, estado)
+        VALUES (1, :token, :fecha_registro, :expiracion, 1)
+    ");
+    $stmt->execute([
+        ':token'          => $token,
+        ':fecha_registro' => $now,
+        ':expiracion'     => $expira
+    ]);
 
-            echo json_encode(["status"=>true,"token"=>$token,"expira"=>$expira]);
-            return;
-        }
+    echo json_encode([
+        "status" => true,
+        "token"  => $token,
+        "expira" => $expira
+    ]);
+    return;
+}
+
 
         /* ------- 2) obtener último token ------- */
         if($tipo == "getLastToken")
