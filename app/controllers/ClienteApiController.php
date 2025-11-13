@@ -35,12 +35,12 @@ class ClienteApiController
     $expira = date("Y-m-d H:i:s", strtotime("+1 hour"));
 
     $stmt = $this->pdo->prepare("
-        INSERT INTO tokens (id_cliente, token, fecha_registro, expiracion, estado)
-        VALUES (1, :token, :fecha_registro, :expiracion, 1)
+        INSERT INTO tokens (id_cliente, token, fecha_guardado, expiracion, estado)
+        VALUES (1, :token, :fecha_guardado, :expiracion, 1)
     ");
     $stmt->execute([
         ':token'          => $token,
-        ':fecha_registro' => $now,
+        ':fecha_guardado' => $now,
         ':expiracion'     => $expira
     ]);
 
