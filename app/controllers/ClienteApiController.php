@@ -32,7 +32,7 @@ class ClienteApiController
     $token  = $random . "-" . $hoy . "-1";
 
     $now    = date("Y-m-d H:i:s");
-    $expira = date("Y-m-d H:i:s", strtotime("+1 hour"));
+    $expira   = date("Y-m-d H:i:s", strtotime("+1 day"));
 
     $stmt = $this->pdo->prepare("
         INSERT INTO tokens (id_cliente, token, fecha_registro, expiracion, estado)
